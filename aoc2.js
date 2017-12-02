@@ -41,10 +41,7 @@ let p3 = {
 	
 	test() {
 		let tests = [
-			{
-				problem: ["5 1 9 5", "7 5 3", "2 4 6 8"],
-				solution: 18
-			}
+			{problem: ["5 1 9 5", "7 5 3", "2 4 6 8"], solution: 18}
 		];
 		
 		let success = true;
@@ -97,22 +94,22 @@ let p4 = {
 	
 	checkRow(row) {
 		if (row.length == 0) return 0;
-		let smallest = +(row[0]);
-		let largest = +(row[0]);
-		for (let i = 1; i < row.length; ++i) {
-			let curr = +(row[i])
-			smallest = (curr < smallest)? curr: smallest;
-			largest = (curr > largest)? curr: largest;
+		for (let i = 0; i < row.length; ++i) {
+			let dividend = +(row[i])
+			for (let j = 0; j < row.length; ++j) {
+				if (i == j) continue;
+				let divisor = +(row[j]);
+				if (dividend % divisor == 0)
+					return dividend / divisor;
+			}
 		}
-		return largest - smallest;
+		console.log("err");
+		return 0;
 	},
 	
 	test() {
 		let tests = [
-			{
-				problem: ["5 1 9 5", "7 5 3", "2 4 6 8"],
-				solution: 18
-			}
+			{problem: ["5 9 2 8", "9 4 7 3", "3 8 6 5"], solution: 9}
 		];
 		
 		let success = true;
