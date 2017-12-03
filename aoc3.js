@@ -35,3 +35,8 @@ let p5 = {
 		return len;
 	}
 };
+
+// Well, I regret not building out the terrible spiral for part 1....
+
+// actually nah, i just made a excel sheet with it that took a couple minutes to make...
+// :smirk:
