@@ -26,3 +26,50 @@ let p7 = {
 		return true;
 	}
 };
+
+let p8 = {
+	problem: day4,
+	
+	tests: [
+		{problem: ["abcde fghij"], solution: 1},
+		{problem: ["abcde xyz ecdab"], solution: 0},
+		{problem: ["a ab abc abd abf abj"], solution: 1},
+		{problem: ["iiii oiii ooii oooi oooo"], solution: 1},
+		{problem: ["oiii ioii iioi iiio"], solution: 0},
+		{problem: ["abcde fghij", "abcde xyz ecdab"], solution: 1},
+		{problem: ["abcde fghij", "abcde xyz ecdab", "a ab abc abd abf abj"], solution: 2},
+		{problem: ["abcde fghij", "abcde xyz ecdab", "a ab abc abd abf abj", "iiii oiii ooii oooi oooo"], solution: 3},
+		{problem: ["abcde fghij", "abcde xyz ecdab", "a ab abc abd abf abj", "iiii oiii ooii oooi oooo", "oiii ioii iioi iiio"], solution: 3}
+	],
+
+	solveFor: function(passphrases) {
+		let valid = 0;
+		for (let i = 0; i < passphrases.length; ++i)
+			valid += (this.isValid(passphrases[i]))? 1: 0;
+		
+		return valid;
+	},
+	
+	isValid: function(passphrase) {
+		let tokens = passphrase.split(' ');
+		for (let i = 0; i < tokens.length; ++i)
+			for (let j = i + 1; j < tokens.length; ++j)
+				if (this.isAnagram(tokens[i],tokens[j])) {
+					return false;
+				}
+		
+		return true;
+	},
+	
+	isAnagram: function(tokenA, tokenB) {
+		return this.sortString(tokenA) === this.sortString(tokenB);
+	},
+	
+	sortString: function(string) {
+		let charList = string.split('').sort();
+		let sorted = "";
+		for (let i = 0; i < charList.length; ++i)
+			sorted += charList[i];
+		return sorted;
+	}
+};
