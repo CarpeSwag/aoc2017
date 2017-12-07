@@ -10,7 +10,7 @@ let p13 = {
 
 	solveFor: function(shouts) {
 		let programs = {}
-		let bottom = "";
+		let root = "";
 		for (let i = 0; i < shouts.length; ++i) {
 			let prog = this.createProgram(shouts[i]);
 			prog.par = (programs[prog.name] == null)?
@@ -22,13 +22,14 @@ let p13 = {
 				}
 				programs[prog.children[j]].par = prog.name;
 			}
-			bottom = prog;
+			root = prog;
 		}
 		
-		while (bottom.par != "") {
-			bottom = programs[bottom.par];
+		while (root.par != "") {
+			root = programs[root.par];
 		}
-		return bottom.name;
+		
+		return root.name;
 	},
 	
 	createProgram: function(shout) {
@@ -44,3 +45,96 @@ let p13 = {
 	}
 };
 
+let p14 = {
+	problem: day7,
+	
+	tests: [
+		{problem: ["pbga (66)", "xhth (57)", "ebii (61)", "havc (66)", "ktlj (57)", "fwft (72) -> ktlj, cntj, xhth", "qoyq (66)", "padx (45) -> pbga, havc, qoyq", "tknk (41) -> ugml, padx, fwft", "jptl (61)", "ugml (68) -> gyxo, ebii, jptl", "gyxo (61)", "cntj (57)"],
+			solution: 60}
+	],
+
+	solveFor: function(shouts) {
+		let programs = {}
+		let root = "";
+		for (let i = 0; i < shouts.length; ++i) {
+			let prog = this.createProgram(shouts[i]);
+			prog.par = (programs[prog.name] == null)?
+					'': programs[prog.name];
+			programs[prog.name] = prog;
+			for (let j = 0; j < prog.children.length; ++j) {
+				if (programs[prog.children[j]] == null) {
+					programs[prog.children[j]] = prog.name;
+				}
+				programs[prog.children[j]].par = prog.name;
+			}
+			root = prog;
+		}
+		
+		while (root.par != "") {
+			root = programs[root.par];
+		}
+		
+		this.calcTotalWeights(programs, root, 0);
+		
+		return this.findCorrectWeight(programs, root);
+	},
+	
+	createProgram: function(shout) {
+		let name = shout.split(' (')[0];
+		let weight = +(shout.split(' (')[1].split(')')[0]);
+		let children = (shout.split(' -> ').length > 1)?
+			shout.split(' -> ')[1].split(', '): [];
+		return {
+			name: name,
+			weight: weight,
+			children: children
+		}
+	},
+	
+	calcTotalWeights: function(programs, program, level) {
+		let sum = program.weight;
+		program.level = level;
+		for (let i = 0; i < program.children.length; ++i)
+			sum += this.calcTotalWeights(programs,
+				programs[program.children[i]], level + 1);
+		program.totalWeight = sum;
+		return sum;
+	},
+	
+	findCorrectWeight: function(programs, program) {
+		if (program.children.length == 0) return '';
+		
+		if (program.children.length == 1)
+			return this.findCorrectWeight(programs,
+				programs[program.children[0]]);
+		
+		let childWeights = [];
+		for (let i = 0; i < program.children.length; ++i)
+			childWeights.push((programs[program.children[i]].totalWeight));
+		
+		let badVal = -1;
+		let goodVal = 0;
+		let a = childWeights[0];
+		let b = childWeights[1];
+		if (a == b) {
+			for (let i = 2; i < childWeights.length; ++i) {
+				if (childWeights[i] != a) {
+					badVal = i;
+					break;
+				}
+			}
+			if (badVal == -1) return '';
+		} else {
+			badVal = (a != childWeights[2])? 0: 1;
+			goodVal = (a == childWeights[2])? 0: 1;
+		}
+		
+		let goodNode = programs[program.children[goodVal]];
+		let badNode = programs[program.children[badVal]];
+		let diff = goodNode.totalWeight - badNode.totalWeight;
+		
+		let next = this.findCorrectWeight(programs, badNode);
+		
+		return (next == '')? badNode.weight + diff: next;
+	}
+};
