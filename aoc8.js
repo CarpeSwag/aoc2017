@@ -28,21 +28,8 @@ let p15 = {
 		let command = line.split(" ");
 		values[command[0]] = values[command[0]] || 0;
 		values[command[4]] = values[command[4]] || 0;
-		if (this.compare(+(values[command[4]]), command[5], +(command[6])))
-			values[command[0]] += +(command[2]) * ((command[1] === 'inc')? 1: -1);
-		
-	},
-
-	compare: function(x, comparison, y) {
-		switch (comparison) {
-			case "==": return x == y;
-			case "!=": return x != y;
-			case ">": return x > y;
-			case "<": return x < y;
-			case ">=": return x >= y;
-			case "<=": return x <= y;
-			default: return false;
-		}
+		if (eval(values[command[4]] + command[5] + command[6]))
+			values[command[0]] += +(command[2]) * ((command[1] === 'inc')? 1: -1);	
 	}
 };
 
@@ -68,20 +55,8 @@ let p16 = {
 		let command = line.split(" ");
 		values[command[0]] = values[command[0]] || 0;
 		values[command[4]] = values[command[4]] || 0;
-		if (this.compare(+(values[command[4]]), command[5], +(command[6])))
+		if (eval(+(values[command[4]]) + command[5] + +(command[6])))
 			values[command[0]] += +(command[2]) * ((command[1] === 'inc')? 1: -1);
 		return values[command[0]];
 	},
-
-	compare: function(x, comparison, y) {
-		switch (comparison) {
-			case "==": return x == y;
-			case "!=": return x != y;
-			case ">": return x > y;
-			case "<": return x < y;
-			case ">=": return x >= y;
-			case "<=": return x <= y;
-			default: return false;
-		}
-	}
 };
