@@ -45,3 +45,43 @@ let p15 = {
 		}
 	}
 };
+
+let p16 = {
+	problem: day8,
+	
+	tests: [
+		{problem: ["b inc 5 if a > 1", "a inc 1 if b < 5", "c dec -10 if a >= 1", "c inc -20 if c == 10"], solution: 10}
+	],
+
+	solveFor: function(commands) {
+		let valueTable = {};
+		let highest = Number.NEGATIVE_INFINITY;
+		for (let i = 0; i < commands.length; ++i) {
+			let last = this.process(valueTable, commands[i]);
+			highest = (last > highest)? last: highest;
+		}
+		
+		return highest;
+	},
+
+	process: function(values, line) {
+		let command = line.split(" ");
+		values[command[0]] = values[command[0]] || 0;
+		values[command[4]] = values[command[4]] || 0;
+		if (this.compare(+(values[command[4]]), command[5], +(command[6])))
+			values[command[0]] += +(command[2]) * ((command[1] === 'inc')? 1: -1);
+		return values[command[0]];
+	},
+
+	compare: function(x, comparison, y) {
+		switch (comparison) {
+			case "==": return x == y;
+			case "!=": return x != y;
+			case ">": return x > y;
+			case "<": return x < y;
+			case ">=": return x >= y;
+			case "<=": return x <= y;
+			default: return false;
+		}
+	}
+};
