@@ -38,3 +38,41 @@ let p17 = {
 		return sum;
 	}
 };
+
+let p18 = {
+	problem: day9,
+	
+	tests: [
+		{problem: "<>", solution: 0},
+		{problem: "<random characters>", solution: 17},
+		{problem: "<<<<>", solution: 3},
+		{problem: "<{!>}>", solution: 2},
+		{problem: "<!!>", solution: 0},
+		{problem: "<!!!>>", solution: 0},
+		{problem: "<{o\"i!a,<{i<a>", solution: 10}
+	],
+
+	solveFor: function(stream) {
+		let cleaned = this.removeCancelled(stream);
+		return this.countGarbage(cleaned);
+	},
+
+	removeCancelled(input) {
+		return input.replace(/(!.)/g, "");
+	},
+	
+	countGarbage(stream) {
+		let isGarbage = false;
+		let count = 0;
+		for (let i = 0; i < stream.length; ++i) {
+			if (stream.charAt(i) === ">") {
+				isGarbage = false;
+			} else if (isGarbage) {
+				++count;
+			} else if (stream.charAt(i) === "<") {
+				isGarbage = true;
+			}
+		}
+		return count;
+	}
+};
