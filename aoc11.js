@@ -20,12 +20,12 @@ let p21 = {
 			count[dir[i]] += 1;
 		
 		this.cancel(count);
-		this.reduceY(count, 'n');
-		this.reduceY(count, 's');
-		this.reduceX(count, 'e', 'n');
-		this.reduceX(count, 'e', 's');
-		this.reduceX(count, 'w', 'n');
-		this.reduceX(count, 'w', 's');
+		this.reduceDir(count, 'n', 'nw', 'ne');
+		this.reduceDir(count, 's', 'se', 'sw');
+		this.reduceDir(count, 'e', 'n', 'se');
+		this.reduceDir(count, 'e', 's', 'ne');
+		this.reduceDir(count, 'w', 'n', 'sw');
+		this.reduceDir(count, 'w', 's', 'nw');
 		
 		return count.n + count.e + count.ne + count.nw
 		     + count.s + count.w + count.se + count.sw;
@@ -43,19 +43,11 @@ let p21 = {
 		count.se -= nw;
 	},
 	
-	reduceY: function(count, dir) {
-		let min = Math.min(count[dir + 'e'], count[dir + 'w']);
+	reduceDir: function(count, dir, dir1, dir2) {
+		let min = Math.min(count[dir1], count[dir2]);
 		count[dir] += min;
-		count[dir + 'e'] -= min;
-		count[dir + 'w'] -= min;
-	},
-	
-	reduceX: function(count, dirX, dirY) {
-		let o = (dirY == 'n')? 's': 'n';
-		let min = Math.min(count[dirY], count[o + dirX]);
-		count[dirX] += min;
-		count[dirY] -= min;
-		count[o + dirX] -= min;
+		count[dir1] -= min;
+		count[dir2] -= min;
 	}
 };
 
@@ -93,12 +85,12 @@ let p22 = {
 	
 	reduce: function(count) {
 		this.cancel(count);
-		this.reduceY(count, 'n');
-		this.reduceY(count, 's');
-		this.reduceX(count, 'e', 'n');
-		this.reduceX(count, 'e', 's');
-		this.reduceX(count, 'w', 'n');
-		this.reduceX(count, 'w', 's');
+		this.reduceDir(count, 'n', 'nw', 'ne');
+		this.reduceDir(count, 's', 'se', 'sw');
+		this.reduceDir(count, 'e', 'n', 'se');
+		this.reduceDir(count, 'e', 's', 'ne');
+		this.reduceDir(count, 'w', 'n', 'sw');
+		this.reduceDir(count, 'w', 's', 'nw');
 		
 		return count.n + count.e + count.ne + count.nw
 		     + count.s + count.w + count.se + count.sw;
@@ -116,18 +108,10 @@ let p22 = {
 		count.se -= nw;
 	},
 	
-	reduceY: function(count, dir) {
-		let min = Math.min(count[dir + 'e'], count[dir + 'w']);
+	reduceDir: function(count, dir, dir1, dir2) {
+		let min = Math.min(count[dir1], count[dir2]);
 		count[dir] += min;
-		count[dir + 'e'] -= min;
-		count[dir + 'w'] -= min;
-	},
-	
-	reduceX: function(count, dirX, dirY) {
-		let o = (dirY == 'n')? 's': 'n';
-		let min = Math.min(count[dirY], count[o + dirX]);
-		count[dirX] += min;
-		count[dirY] -= min;
-		count[o + dirX] -= min;
+		count[dir1] -= min;
+		count[dir2] -= min;
 	}
 };
