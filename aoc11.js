@@ -26,57 +26,108 @@ let p21 = {
 		this.reduceX(count, 'e', 's');
 		this.reduceX(count, 'w', 'n');
 		this.reduceX(count, 'w', 's');
-		this.cancel(count);
 		
 		return count.n + count.e + count.ne + count.nw
 		     + count.s + count.w + count.se + count.sw;
 	},
 	
 	cancel: function(count) {
-		let n = count.n - count.s;
-		let ne = count.ne - count.sw;
-		let nw = count.nw - count.se;
-		count.n = (n > 0)? n: 0;
-		count.s = (n > 0)? 0: -n;
-		count.ne = (ne > 0)? ne: 0;
-		count.sw = (ne > 0)? 0: -ne;
-		count.nw = (nw > 0)? nw: 0;
-		count.se = (nw > 0)? 0: -nw;
+		let n = Math.min(count.n, count.s);
+		let ne = Math.min(count.ne, count.sw);
+		let nw = Math.min(count.nw, count.se);
+		count.n -= n;
+		count.s -= n;
+		count.ne -= ne;
+		count.sw -= ne;
+		count.nw -= nw;
+		count.se -= nw;
 	},
 	
 	reduceY: function(count, dir) {
-		let e = dir + 'e';
-		let w = dir + 'w';
-		if (count[e] > count[w]) {
-			count[dir] += (count[w]);
-			count[e] -= count[w];
-			count[w] = 0;
-		} else if (count[w] > count[e]) {
-			count[dir] += (count[e]);
-			count[w] -= count[e];
-			count[e] = 0;
-		} else {
-			count[dir] += (count[w]);
-			count[e] = 0;
-			count[w] = 0;
-		}
+		let min = Math.min(count[dir + 'e'], count[dir + 'w']);
+		count[dir] += min;
+		count[dir + 'e'] -= min;
+		count[dir + 'w'] -= min;
 	},
 	
 	reduceX: function(count, dirX, dirY) {
 		let o = (dirY == 'n')? 's': 'n';
-		let dirXY = o + dirX;
-		if (count[dirY] > count[dirXY]) {
-			count[dirX] += count[dirXY];
-			count[dirY] -= count[dirXY];
-			count[dirXY] = 0;
-		} else if (count[dirXY] > count[dirY]) {
-			count[dirX] += count[dirY];
-			count[dirXY] -= count[dirY];
-			count[dirY] = 0;
-		} else {
-			count[dirX] += count[dirY];
-			count[dirY] = 0;
-			count[dirXY] = 0;
+		let min = Math.min(count[dirY], count[o + dirX]);
+		count[dirX] += min;
+		count[dirY] -= min;
+		count[o + dirX] -= min;
+	}
+};
+
+let p22 = {
+	problem: day11,
+	
+	tests: [
+		{problem: "ne,ne,ne", solution: 3},
+		{problem: "ne,ne,sw,sw", solution: 2},
+		{problem: "ne,ne,s,s", solution: 2},
+		{problem: "se,sw,se,sw,sw", solution: 3}
+	],
+
+	solveFor: function(directions) {
+		let count = {n: 0, e: 0, w: 0, s: 0,
+			ne: 0, nw: 0, se: 0, sw: 0};
+		
+		// Count occurences
+		let dir = directions.split(',');
+		let furthest = 0;
+		for (let i = 0; i < dir.length; ++i) {
+			count[dir[i]] += 1;
+			let dist = this.reduce({
+				n: count.n, e: count.e,
+				w: count.w, s: count.s,
+				ne: count.ne, nw: count.nw,
+				se: count.se, sw: count.sw
+			});
+			furthest = (dist > furthest)?
+				dist: furthest;
 		}
+		
+		return furthest;
+	},
+	
+	reduce: function(count) {
+		this.cancel(count);
+		this.reduceY(count, 'n');
+		this.reduceY(count, 's');
+		this.reduceX(count, 'e', 'n');
+		this.reduceX(count, 'e', 's');
+		this.reduceX(count, 'w', 'n');
+		this.reduceX(count, 'w', 's');
+		
+		return count.n + count.e + count.ne + count.nw
+		     + count.s + count.w + count.se + count.sw;
+	},
+	
+	cancel: function(count) {
+		let n = Math.min(count.n, count.s);
+		let ne = Math.min(count.ne, count.sw);
+		let nw = Math.min(count.nw, count.se);
+		count.n -= n;
+		count.s -= n;
+		count.ne -= ne;
+		count.sw -= ne;
+		count.nw -= nw;
+		count.se -= nw;
+	},
+	
+	reduceY: function(count, dir) {
+		let min = Math.min(count[dir + 'e'], count[dir + 'w']);
+		count[dir] += min;
+		count[dir + 'e'] -= min;
+		count[dir + 'w'] -= min;
+	},
+	
+	reduceX: function(count, dirX, dirY) {
+		let o = (dirY == 'n')? 's': 'n';
+		let min = Math.min(count[dirY], count[o + dirX]);
+		count[dirX] += min;
+		count[dirY] -= min;
+		count[o + dirX] -= min;
 	}
 };
