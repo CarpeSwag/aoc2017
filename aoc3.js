@@ -36,7 +36,52 @@ let p5 = {
 	}
 };
 
-// Well, I regret not building out the terrible spiral for part 1....
+let p6 = {
+	problem: day3,
+	
+	tests: [
+		{problem: 1, solution: 2},
+		{problem: 10, solution: 11},
+		{problem: 9, solution: 10},
+		{problem: 12, solution: 23},
+		{problem: 23, solution: 25},
+		{problem: 25, solution: 26},
+		{problem: 500, solution: 747}
+	],
 
-// actually nah, i just made a excel sheet with it that took a couple minutes to make...
-// :smirk:
+	solveFor: function(input) {
+		let graph = {'0,0': 1};
+		let value = 1;
+		let sideLen = 1;
+		let counter = 1;
+		let x = 0;
+		let y = 0;
+		let d = [1,0];
+		while (value <= input) {
+			++counter;
+			if (counter >= sideLen * sideLen)
+				sideLen += 2;
+			x += d[0];
+			y += d[1];
+			if (d[0] == 1 && x == Math.floor(sideLen/2)) d = [0,1];
+			else if (d[1] == 1 && y == Math.floor(sideLen/2)) d = [-1,0];
+			else if (d[0] == -1 && x == -Math.floor(sideLen/2)) d = [0,-1];
+			else if (d[1] == -1 && y == -Math.floor(sideLen/2)) d = [1,0];
+			value = this.adjacentSum(graph, x, y);
+			graph[x + ',' + y] = value;
+		}
+		
+		return value;
+	},
+	
+	adjacentSum: function(graph, x, y) {
+		let sum = 0;
+		for (let i = -1; i <= 1; ++i)
+			for (let j = -1; j <= 1; ++j) {
+				let block = graph[(x+i) + ',' + (y+j)];
+				if (block != null)
+					sum += block;
+			}
+		return sum;
+	}
+};
