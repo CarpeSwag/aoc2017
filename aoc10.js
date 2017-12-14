@@ -1,7 +1,7 @@
-let day10 = {size: 256, input: "46,41,212,83,1,255,157,65,139,52,39,254,2,86,0,204"};
+let day10 = "46,41,212,83,1,255,157,65,139,52,39,254,2,86,0,204";
 
 let p19 = {
-	problem: day10,
+	problem: {size: 256, input: day10},
 	
 	tests: [
 		{problem: {size: 5, input: "3,4,1,5"}, solution: 12}
@@ -44,17 +44,17 @@ let p20 = {
 	
 	// size is from problem 19 testing... not necessary here
 	tests: [
-		{problem: {size: 42, input: ""}, solution: "a2582a3a0e66e6e86e3812dcb672a272"},
-		{problem: {size: 42, input: "AoC 2017"}, solution: "33efeb34ea91902bb2f59c9920caa6cd"},
-		{problem: {size: 42, input: "1,2,3"}, solution: "3efbe78a8d82f29979031a4aa0b16a9d"},
-		{problem: {size: 42, input: "1,2,4"}, solution: "63960835bcdc130f0b66d7ff4f6a5a8e"},
+		{problem: "", solution: "a2582a3a0e66e6e86e3812dcb672a272"},
+		{problem: "AoC 2017", solution: "33efeb34ea91902bb2f59c9920caa6cd"},
+		{problem: "1,2,3", solution: "3efbe78a8d82f29979031a4aa0b16a9d"},
+		{problem: "1,2,4", solution: "63960835bcdc130f0b66d7ff4f6a5a8e"},
 	],
 
 	solveFor: function(problem) {
 		let list = Array.apply(null, {length: 256})
 			.map(Number.call, Number);
 		
-		let inputList = this.generateInput(problem.input);
+		let inputList = this.generateInput(problem);
 		let ROUNDS = 64;
 		let currPos = 0;
 		for (let i = 0; i < ROUNDS; ++i) {
